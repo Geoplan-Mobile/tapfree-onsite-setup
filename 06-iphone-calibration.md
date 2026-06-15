@@ -21,7 +21,35 @@
 
 ### 1. 앵커 위치 동기화
 
-> TBD — 앵커 위치 동기화 절차로 변경 예정. 작성 보류.
+캘리브레이션 수행에는 대상 앵커들의 측정 좌표가 필요하다.
+
+앵커 좌표는 Calibrator 앱에서 **수동으로 직접 입력할 수도 있으나**, 편의를 위해 [04. Geospace 앵커 설정](./04-geospace-anchors.md) 을 통해 **이미 입력된 Geospace 로부터 동기화하는 기능** 을 제공한다. 본 단계에서는 그 동기화 기능을 사용한다.
+
+1. Calibrator 앱 메인 화면의 **AnchorLoc** 버튼을 눌러 `Anchor 위치 설정` 화면 진입.
+
+   <img src="./img/calibrator-main-anchor-loc.png" width="300" alt="Calibrator 메인 — AnchorLoc">
+
+2. 앵커 좌표가 입력된 Geospace 의 **HOST URL** 과 **port** 를 입력 (**port 는 `8443` 고정**) 후 **Connect** 클릭. <br>이어서 Project 와 Space 를 모두 **`test`** 로 선택하고 **DATA SYNC** 버튼 클릭.
+
+   예시 (성남 LAB):
+
+   | 항목 | 값 |
+   |---|---|
+   | URL | `tapfreeE0801.cns-link.net` |
+   | Port | `8443` |
+
+   <p>
+     <img src="./img/calibrator-anchor-sync-url.png" width="300" alt="Geospace URL 입력">
+     <img src="./img/calibrator-anchor-sync-project-space.png" width="300" alt="Project / Space 선택 및 DATA SYNC">
+   </p>
+
+3. 동기화 완료 후, **기존 Anchor 위치 목록을 동기화된 목록으로 교체할지 확인**.
+
+   > ⚠️ 반영 시 **기존 Anchor 위치 목록은 제거** 되고 동기화된 목록으로 교체된다.
+
+   <img src="./img/calibrator-anchor-sync-list.png" width="300" alt="동기화된 앵커 목록">
+
+
 
 ### 2. 캘리브레이션 시작
 
@@ -29,6 +57,8 @@
 - 메인 화면에서 **Calibration** 버튼을 눌러 `Calibration 설정` 화면으로 진입.
 - `Calibration 설정` 화면의 **TAG 기준 좌표 입력** 영역에 사전 측정된 **캘리브레이션 위치 좌표** 를 입력.
 - 폰을 삼각대 위에 올린 채로 **캘리브레이션 시작** 버튼을 누른다.
+
+> ⚠️ 아래 예시 스크린샷의 **Session ID `4444`** 는 설명용 값이다. 실제 값은 앵커 수령 시 안내받은 값으로 입력해야 한다.
 
 <p>
   <img src="./img/calibrator-main-calibration.png" width="300" alt="Calibrator 메인 — Calibration">
