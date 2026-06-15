@@ -110,49 +110,42 @@ EdgePC 에 SSH 로 접속하여 `zone_settings.json` 을 편집한다.
 
 ### 2.2 Zone
 
-- **zoneCode** : 기본값 `"01"`. 같은 역사 내 zone 이 여러 개일 경우 구분을 위해 `02`, `03` 등으로 지정.
-- **zoneIp** : 기본값 `"192.168.0.30"`. `useZoneIp=true` 일 때만 의미가 있다.
-    - 모바일이 EdgePC 에 **직접 IP 로 접속**하는 시나리오에서 사용하는 주소.
-    - 사용 환경에 따라 값이 달라진다:
+- **zoneCode** : 같은 역사 내 zone 이 여러 개일 경우 구분. 기본값 `"01"`로 사용.
+- **zoneIp** : 모바일이 EdgePC 에 **직접 IP 로 접속**시 사용되는 IP
+    - `useZoneIp=true` 일 때만 이 값이 사용됨.
         - **내부망 접속 (디버깅)** — EdgePC 의 내부 IP (예: `192.168.0.30`)
-        - **외부망 접속이지만 DDNS 없이 LTE 모뎀 고정 IP 사용** — LTE 모뎀의 **고정 공인 IP**
+        - **외부망이지만 DDNS 없이 LTE 모뎀 고정 IP 사용** — LTE 모뎀의 **고정 공인 IP**
 - **useZoneIp** : 기본값 `false`.
-    - `false` — AN200 Advertising 데이터에 역번호와 `zoneCode` 가 세팅. 모바일이 이 값으로 DDNS 도메인 URL 을 작성해 WebSocket 접속한다. **표준 운영 모드.**
-    - `true` — AN200 Advertising 데이터에 위에서 설정한 `zoneIp` 가 세팅. 모바일이 그 IP 로 WebSocket 접속.
-        - 사용 케이스 ①: **내부망 디버깅** — EdgePC 의 내부 IP 로 접속.
-        - 사용 케이스 ②: **DDNS 미사용 + LTE 모뎀 고정 공인 IP** — `zoneIp` 에 모뎀의 고정 공인 IP 를 넣고 `true` 로 설정.
+    - `false` — 모바일이 DDNS로 WebSocket 접속. **표준 운영 모드.**
+    - `true` — 모바일이 zoneIp 로 WebSocket 접속.
 
 ### 2.3 Quuppa
 
-- **quuppa_no** : Quuppa 앵커 MAC → 번호(1~4) 매핑. **필수 필드, 정확히 4개 항목이어야 하며 값은 `"1"`, `"2"`, `"3"`, `"4"` 모두 포함해야 한다** (누락 또는 4 외의 값이 있으면 부팅 실패).
-    - **key** : Quuppa 앵커의 MAC (12자리 hex, 콜론 없음, 대소문자 무관 — 내부에서 대문자로 정규화).
-    - **value** : 그 앵커의 식별 번호 문자열 (`"1"` ~ `"4"`).
-    - **용도** : 앵커에 문제가 발생했을 때 **게이트 측에 어느 앵커인지 알려주기 위한 식별자**. 게이트는 MAC 이 아닌 1~4 번호로 앵커를 구분하므로, 본 매핑으로 MAC ↔ 번호를 미리 정해 둔다.
-    - 서버 내부 매핑 용도이며 모바일에는 노출되지 않는다.
+- **quuppa_no** : 설치된 Quuppa 앵커 MAC → 식별자 번호(1~4고정) 매핑정보.
+    - **key** : Quuppa 앵커의 MAC (12자리 hex, 콜론 없음, 대소문자 무관).
+    - **value** : 앵커의 식별 번호 문자열 (`"1"` ~ `"4"`). 
+    - **용도** : 앵커 문제 발생시 **게이트 측에 문제의 앵커 전달을 위한 식별자**. 
+    - 서버 내부 매핑 용도이며 모바일에는 노출x.
 
 ### 2.4 Aisles
 
-- **aisles** : 게이트 통로 정보의 리스트. 현장 통로 개수만큼 아래 객체가 존재.
-    - **id** : 통로 ID (모바일에서 사용). PRM 의 `AISLE_<id>_<n>` 영역 이름의 **첫 번째 숫자** 와 매칭. <br>예: `AISLE_1_1` 과 `AISLE_1_4` 는 모두 `id=1` 인 동일 aisle 의 영역이다. <br>내부적으로 **2 바이트** 를 사용하므로 **`"01"` 처럼 두 자리로 zero-padding** 하여 입력한다.
-    - **gateId** (EquipId) : 실제 게이트 접속 시 사용되는 ID. 에스트래픽 측 Gate 모듈이 전달하는 ID 이며 외부 시스템에서는 **EquipId** 라는 명칭으로도 통용된다. 모바일에서는 사용되지 않으며 edge 가 `id` 와 `gateId` 로 모바일의 인식 통로와 게이트를 인터페이싱한다.
-    - **freeBle** : free 측에 설치된 AN200 의 MAC 과 board / exit 판단 RSSI 범위.
-        - **mac** : AN200 설치 시 free 쪽에 설치된 MAC ID 를 **`:` 포함하여** 입력한다.
-        - 기본값 : `"boardRssi": [-56, -20]`, `"exitRssi": [-64, -20]`
-    - **paidBle** : paid 측에 설치된 AN200 의 MAC 과 board / exit 판단 RSSI 범위.
-        - **mac** : AN200 설치 시 paid 쪽에 설치된 MAC ID 를 **`:` 포함하여** 입력한다.
-        - 기본값 : `"boardRssi": [-64, -20]`, `"exitRssi": [-58, -20]`
+- **aisles** : 게이트 통로 정보의 리스트. 현장 통로 개수만큼 아래 항목들의 세트가 존재.
+    - **id** : 모바일이 구분하는 통로의 ID. 내부적으로 **2 자리** 를 사용하므로 **`"01"` zero-padding** 하여 입력.
+    - **gateId** (EquipId) : 이 aisle의 Gate컨트롤을 담당하는 GateId. 
+    - **freeBle** : 통로의 free 측에 설치된 BLE모듈 의 MAC, board / exit 판단 RSSI 범위.
+    - **paidBle** : 통로의 paid 측에 설치된 BLE모듈 의 MAC, board / exit 판단 RSSI 범위.
 
 ### 2.5 AnchorInfo (DL-TDoA / UWB 측위)
 
-- **anchorInfo** : DL-TDoA 측위에 사용되는 UWB 세션 설정.
-    - **sessionId** : UWB ranging 세션 식별자 (정수). 앵커 수령 시 안내받은 **제공된 UWB 앵커의 Session ID** 를 입력한다.
-    - **offsets** : 앵커별 타이밍 오프셋 정보 배열.
-        - **mac** : 앵커 MAC (4자리 hex, 대소문자 무관 — 내부에서 대문자로 정규화).
+- **anchorInfo** : DL-TDoA 측위에 사용되는 앵커 정보.
+    - **sessionId** : UWB ranging 세션 식별자 (정수). 앵커 수령 시 안내됨.
+    - **offsets** : 앵커별 타이밍 오프셋 정보 배열. 앵커 수만큼 아래 항목들의 세트가 존재.
+        - **mac** : 앵커 MAC (4자리 hex, 대소문자 무관).
         - **offsetNs** : 마스터 앵커 대비 타이밍 오프셋(나노초 단위). **마스터 앵커는 `0.0` 으로 명시 기재 필요** (생략 불가).
 
-> **검증 규칙** : `offsets` 의 MAC 집합은 **Geospace 에 등록된 앵커 MAC 집합과 정확히 일치**해야 한다 (양쪽 어디든 한 개라도 누락/추가되면 부팅 실패). 마스터 앵커도 반드시 `offsetNs=0.0` 로 명시되어 있어야 한다.
+> **검증 규칙** : `offsets` 의 MAC 집합은 **Geospace 에 등록된 앵커 MAC 집합과 정확히 일치**해야 한다.
 
-> 이 섹션은 부팅 시 PRM 의 area_info, Geospace 의 앵커 목록과 함께 로드되어 검증된다 — PRM / Geospace 가 응답하지 않거나 데이터가 불일치하면 tapfree-edge 가 시작되지 않는다.
+> 이 섹션은 tapfree-edge 구동 시 PRM 의 area_info, Geospace 의 앵커 목록과 함께 로드되어 검증된다 <br>PRM / Geospace 가 응답하지 않거나 데이터가 불일치하면 tapfree-edge 가 시작되지 않는다.
 
 편집 완료 후 저장한다.
 
