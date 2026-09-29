@@ -160,8 +160,14 @@ sudo systemctl status tapfree-edge
 | `quuppa_no is null` | `quuppa_no` 블록 누락. Quuppa 를 사용하지 않아도 블록은 필수 |
 | `quuppa_no must have 4 elements and values 1, 2, 3, 4` | 4개 미만이거나 1~4 외의 값 사용 |
 | `zoneCode or zoneIp is null` | `zoneCode` 또는 `zoneIp` 필드 누락 |
+| `zone settings initialize error :`<br>`Prm result is null or fail` | **PRM 서버가 동작하지 않음** |
+| `zone settings initialize error :`<br>`Geospace anchors not found or not synchronized` | **Geospace 서버가 동작하지 않음** |
 
 > 위 오류가 발생하면 **tapfree-edge 는 정상적으로 시작하지 못하고 프로세스가 종료된다.** 이후 systemd 가 일정 시간 단위로 **계속 재시작을 시도**하므로 로그에 같은 오류가 반복 기록될 수 있다. `zone_settings.json` 을 정정한 뒤 다시 시작해야 정상 기동된다.
+
+> ℹ️ **PRM / Geospace 오류는 기기 최초 부팅 시 발생할 수 있다.**  
+> 두 서버가 올라오기 전에 tapfree-edge 가 먼저 기동하면 발생하는 오류이며, 프로세스가 종료된 뒤 자동으로 다시 실행되므로 **두 서버가 정상 구동되면 문제없이 해소된다.**  
+> 다만 **오류가 계속 반복된다면 해당 서버가 올라오지 못한 것** 이므로 PRM / Geospace 의 구동 상태를 점검해야 한다. ([00. 전제 조건 확인](./00-prerequisites.md) 의 구동 확인 URL 참조)
 
 ---
 
