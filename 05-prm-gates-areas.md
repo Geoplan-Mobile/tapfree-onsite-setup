@@ -116,4 +116,4 @@
 
 ---
 
-→ [06. iPhone 캘리브레이션](./06-iphone-calibration.md)
+→ [06. iPhone 캘리브레이션 (불필요, 확인만)](./06-iphone-calibration.md)

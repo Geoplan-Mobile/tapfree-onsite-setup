@@ -68,7 +68,7 @@ EdgePC 가 외부망에 접속하기 위한 LTE 모뎀 기본 설정 단계.
 |---|---|---|
 | `192.168.0.29` | 모뎀 자신 | static |
 | `192.168.0.30` | EdgePC | static |
-| `192.168.0.31` 이후 | 기타 내부 기기 (Quuppa 앵커, 모니터링 device 등) | DHCP |
+| `192.168.0.31` 이후 | 기타 내부 기기 (앵커, 모니터링 device 등. Quuppa 사용 시 Quuppa 앵커 포함) | DHCP |
 
 ---
 
@@ -198,4 +198,4 @@ DDNS 도메인을 통해 EdgePC 에 **SSH 로도 접속 가능한지** 확인한
 
 ---
 
-→ [03. EdgePC TimeZone 설정](./03-edgepc-timezone.md)
+→ [03. EdgePC TimeZone 설정 (불필요, 확인만)](./03-edgepc-timezone.md)
